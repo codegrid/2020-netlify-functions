@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Send Message Example</title>
+  </head>
+  <body>
+    <!-- メッセージ送信フォーム -->
+    <form>
+      <input name="message" />
+      <button type="submit">Send</button>
+    </form>
+
+    <!-- メッセージ送信スクリプト -->
+    <script>
+      const form = document.querySelector('form');
+
+      const sendMessage = async () => {
+        const formData = new FormData(form);
+        const message = formData.get('message');
+
+        const res = await fetch('/.netlify/functions/send-message', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json; carset=UTF-8',
+          },
+          body: JSON.stringify({ message }),
+        }).then((res) => res.json());
+
+        console.log(res);
+
+        form.reset();
+      };
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        sendMessage().catch((err) => {
+          console.error(err);
+        });
+      });
+    </script>
+  </body>
+</html>
