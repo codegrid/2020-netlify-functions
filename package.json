@@ -7,6 +7,7 @@
   },
   "private": true,
   "devDependencies": {
+    "netlify-cli": "2.40.0",
     "prettier": "2.0.5"
   },
   "dependencies": {
