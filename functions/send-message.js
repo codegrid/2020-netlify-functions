@@ -2,7 +2,10 @@
 const token = process.env.SLACK_API_TOKEN;
 
 exports.handler = async (event) => {
-  // TODO: リクエストボディからSlackに送信するメッセージを抽出する
+  // リクエストボディからSlackに送信するメッセージを抽出する
+  const requestBody = JSON.parse(event.body);
+  const message = requestBody.message;
+
   // TODO: Slack APIを使ってメッセージを送る
 
   // クライアントへのレスポンスを返す
