@@ -16,6 +16,15 @@ exports.handler = async (event) => {
     };
   }
 
+  // 期待するContent-Typeでなければエラーを返して処理を終える
+  if (!event.headers['content-type'].includes('application/json')) {
+    return {
+      statusCode: 415,
+      headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+      body: JSON.stringify({ error: 'Unsupported media type.' }),
+    };
+  }
+
   // リクエストボディからSlackに送信するメッセージを抽出する
   const requestBody = JSON.parse(event.body);
   const message = requestBody.message;
