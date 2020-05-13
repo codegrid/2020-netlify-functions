@@ -39,6 +39,15 @@ exports.handler = async (event) => {
 
   const message = requestBody.message;
 
+  // メッセージが空であればエラーを返して処理を終了する
+  if (message === '') {
+    return {
+      statusCode: 400,
+      headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+      body: JSON.stringify({ error: 'Empty message.' }),
+    };
+  }
+
   // Slack APIを使ってメッセージを送る
   const res = await fetch('https://slack.com/api/chat.postMessage', {
     method: 'POST',
