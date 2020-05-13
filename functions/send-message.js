@@ -27,6 +27,16 @@ exports.handler = async (event) => {
 
   // リクエストボディからSlackに送信するメッセージを抽出する
   const requestBody = JSON.parse(event.body);
+
+  // 入力値が文字列でなければエラーを返して処理を終了する
+  if (typeof requestBody.message !== 'string') {
+    return {
+      statusCode: 400,
+      headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+      body: JSON.stringify({ error: 'Message property must be a string.' }),
+    };
+  }
+
   const message = requestBody.message;
 
   // Slack APIを使ってメッセージを送る
