@@ -49,19 +49,39 @@ exports.handler = async (event) => {
   }
 
   // Slack APIを使ってメッセージを送る
-  const res = await fetch('https://slack.com/api/chat.postMessage', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: JSON.stringify({
-      channel: 'general',
-      text: message,
-    }),
-  }).then(res => res.json());
+  let res;
 
-  console.log(res);
+  try {
+    res = await fetch('https://slack.com/api/chat.postMessage', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: JSON.stringify({
+        channel: 'general',
+        text: message,
+      }),
+    }).then((res) => res.json());
+  } catch (error) {
+    console.log(`[ERROR] Function - ${error}`);
+
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+      body: JSON.stringify({ error: 'Server error.' }),
+    }
+  }
+
+  if (res.ok === false) {
+    console.log(`[ERROR] Slack API - ${res.error}`);
+
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+      body: JSON.stringify({ error: 'Server error.' }),
+    };
+  }
 
   // クライアントへのレスポンスを返す
   return {
