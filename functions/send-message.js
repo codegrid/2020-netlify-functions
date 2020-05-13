@@ -4,6 +4,18 @@ const fetch = require('node-fetch');
 const token = process.env.SLACK_API_TOKEN;
 
 exports.handler = async (event) => {
+  // POSTリクエストでない場合にはエラーを返して処理を終える
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      headers: {
+        Allow: 'POST',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: JSON.stringify({ error: 'Method not allowed.' }),
+    };
+  }
+
   // リクエストボディからSlackに送信するメッセージを抽出する
   const requestBody = JSON.parse(event.body);
   const message = requestBody.message;
